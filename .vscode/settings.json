@@ -1,0 +1,19 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.validate": [
+        "javascript",
+        "vue"
+    ],
+    "eslint.format.enable": true,
+    "editor.tabSize": 2,
+    "prettier.vueIndentScriptAndStyle": true,
+    "editor.renderControlCharacters": true,
+    "editor.rulers": [
+        120
+    ],
+    "editor.renderWhitespace": "trailing",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
