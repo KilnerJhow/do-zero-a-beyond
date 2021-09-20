@@ -4,8 +4,8 @@
       <v-col lg="8">
         <v-card flat class="pa-5">
           <v-row>
-            <v-avatar color="primary white--text">{{nameInitials}}</v-avatar>
-            <span class="pa-3">{{publicationProp.name}}</span>
+            <v-avatar color="primary white--text">{{ nameInitials }}</v-avatar>
+            <span class="pa-3">{{ publicationProp.name }}</span>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog_edit" width="700">
               <template v-slot:activator="{ on, attrs }">
@@ -18,16 +18,16 @@
                 <v-card-title class="text-h5 grey lighten-2">
                   Editando publicação
                 </v-card-title>
-                <v-textarea class="ma-3" v-model="textField" auto-grow></v-textarea>
+                <v-textarea
+                  class="ma-3"
+                  v-model="textField"
+                  auto-grow
+                ></v-textarea>
                 <v-divider></v-divider>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    color="primary"
-                    text
-                    @click="changeContent()"
-                  >
+                  <v-btn color="primary" text @click="changeContent()">
                     Confirmar
                   </v-btn>
                   <v-btn color="red" text @click="closeDialogEdit()">
@@ -44,20 +44,24 @@
               </template>
 
               <v-card>
-                <v-card-title>Você tem certeza de que deseja excluir?</v-card-title>
+                <v-card-title
+                  >Você tem certeza de que deseja excluir?</v-card-title
+                >
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn text @click="removeContent()" color="primary">
                     Sim
                   </v-btn>
-                  <v-btn text @click="closeDialogDelete()" color="red">Não</v-btn>
+                  <v-btn text @click="closeDialogDelete()" color="red"
+                    >Não</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
           </v-row>
           <v-row class="pa-3 rounded">
             <v-card flat>
-              {{publicationProp.text}}
+              {{ publicationProp.text }}
             </v-card>
           </v-row>
           <v-row justify="space-between">
@@ -80,9 +84,9 @@
 <script>
 export default {
   computed: {
-    nameInitials(){
-      let retName = this.publicationProp.name.split(" ")
-      if (retName.length > 1){
+    nameInitials() {
+      let retName = this.publicationProp.name.split(' ')
+      if (retName.length > 1) {
         // console.log(retName[0].charAt(0) + retName[1].charAt(0))
         return retName[0].charAt(0) + retName[1].charAt(0)
       } else {
@@ -91,7 +95,7 @@ export default {
     }
   },
   props: ['publicationProp'],
-  data () {
+  data() {
     return {
       dialog_delete: false,
       dialog_edit: false,
@@ -108,18 +112,18 @@ export default {
       this.dialog_edit = false
       this.$emit('change-content', content)
     },
-    removeContent(){
+    removeContent() {
       // console.log("Removendo conteúdo " + this.publicationProp.id)
       this.$emit('remove-content', this.publicationProp.id)
       this.dialog_delete = false
     },
-    showContent(){
+    showContent() {
       this.textField = this.publicationProp.text
     },
-    closeDialogDelete(){
+    closeDialogDelete() {
       this.dialog_delete = false
     },
-    closeDialogEdit(){
+    closeDialogEdit() {
       this.dialog_edit = false
     }
   }
