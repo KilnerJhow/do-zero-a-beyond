@@ -2,15 +2,19 @@
   <div class="navbar">
     <v-app-bar flat class="primary">
       <!-- <v-app-bar-nav-icon @click="leftDrawer = !leftDrawer" class="hidden-md-and-up"></v-app-bar-nav-icon> -->
-      <v-toolbar-title class="text-uppercase">
-        <span class="font-weight-light">Vuetify</span>
-        <span>Social</span>
+      <v-toolbar-title class="text-uppercase" @click="goToHome()">
+        <!-- <v-btn class="button"> -->
+        <button class="button">
+          <span class="font-weight-light">Vuetify</span>
+          <span>Social</span>
+        </button>
+        <!-- </v-btn> -->
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text @click="darkMode()">
         <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
-      <v-btn @click="goToUsers()">
+      <v-btn @click="goToUsers()" text>
         Usuários
       </v-btn>
       <v-dialog v-model="dialog_delete_toolbar" width="500">
@@ -39,7 +43,6 @@
 
 <script>
 export default {
-  props: ['lightState'],
   data() {
     return {
       dialog_delete_toolbar: false
@@ -56,14 +59,28 @@ export default {
       this.dialog_delete_toolbar = false
     },
     darkMode() {
-      let x = !this.lightState
-      // console.log('Modo de luz trocada na toolbar ' + x)
-      this.$emit('change-light-mode', x)
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.$store.dispatch('lightMode', this.$vuetify.theme.dark)
     },
     goToUsers() {
-      this.$router.push(`/users`)
+      if (this.$route.path != '/users') this.$router.push(`/users`)
+    },
+    goToHome() {
+      if (this.$route.path != '/') this.$router.push('/')
     }
   }
 }
 </script>
+
+<style scoped>
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>

@@ -82,7 +82,14 @@ const content = {
     }
   },
   mutations: {
-    addContent(state, publication) {
+    addContent(state, payload) {
+      let publication = {
+        text: payload.text,
+        name: payload.name,
+        user_id: payload.user_id,
+        id: state.id
+      }
+      console.log(publication)
       state.publications.unshift(publication)
     },
     deleteContent(state, index) {
@@ -117,12 +124,14 @@ const store = new Vuex.Store({
   },
   actions: {
     lightMode({ commit }, payload) {
+      console.log('Changing light mode')
       commit('changeLightMode', payload)
     }
   },
   mutations: {
     changeLightMode(state, payload) {
       state.dark_mode = payload
+      console.log('Dark mode ' + payload)
     }
   },
   plugins: [new VuexPersistence().plugin]

@@ -35,7 +35,8 @@ export default {
       if (this.text.trim() != '') {
         let publication = {
           text: this.text,
-          name: 'Jonathan Kilner'
+          name: 'Jonathan Kilner',
+          user_id: 4
         }
         // console.log("Adicionando " + this.text)
         this.$emit('publish', publication)

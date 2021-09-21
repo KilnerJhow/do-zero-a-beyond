@@ -10,6 +10,11 @@ export default {
 
   data() {
     return {}
+  },
+  mounted() {
+    const theme = this.$store.state.dark_mode
+    console.log('Dark mode: ' + theme)
+    this.$vuetify.theme.dark = theme
   }
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <v-main>
+    <tool-bar />
     <v-list-item
       v-for="user of $store.state.users.users"
       :key="user.id"
@@ -11,11 +12,15 @@
 </template>
 
 <script>
+import ToolBar from '../components/ToolBar.vue'
 export default {
   methods: {
     goToUserPublications(user) {
       this.$router.push(`/publication/${user.id}`)
     }
+  },
+  components: {
+    ToolBar
   }
 }
 </script>
