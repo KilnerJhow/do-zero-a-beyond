@@ -16,7 +16,7 @@ import ToolBar from '../components/ToolBar.vue'
 export default {
   methods: {
     goToUserPublications(user) {
-      this.$router.push(`/publication/${user.id}`)
+      this.$router.push(`/profiles/${user.id}`)
     }
   },
   components: {

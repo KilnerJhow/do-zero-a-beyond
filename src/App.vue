@@ -13,7 +13,7 @@ export default {
   },
   mounted() {
     const theme = this.$store.state.dark_mode
-    console.log('Dark mode: ' + theme)
+    // console.log('Dark mode: ' + theme)
     this.$vuetify.theme.dark = theme
   }
 }

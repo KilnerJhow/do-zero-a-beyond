@@ -85,12 +85,15 @@
 export default {
   computed: {
     nameInitials() {
-      let retName = this.publicationProp.name.split(' ')
-      if (retName.length > 1) {
-        // console.log(retName[0].charAt(0) + retName[1].charAt(0))
-        return retName[0].charAt(0) + retName[1].charAt(0)
+      let name = this.publicationProp.name.split(' ')
+      let ret = ''
+      if (name.length > 1) {
+        // console.log(name[0].charAt(0) + name[1].charAt(0))
+        ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
+        return ret.toUpperCase()
       } else {
-        return retName[0].charAt(0)
+        ret = name[0].charAt(0)
+        return ret
       }
     }
   },

@@ -1,13 +1,12 @@
 <template>
   <v-main>
-    <tool-bar />
     <v-container
       fluid
       v-for="(publication, index) in userPublications"
       :key="index"
     >
       <v-row no-gutters justify="center">
-        <v-col lg="8" md="8" class="mt-5 align">
+        <v-col lg="8" md="8" class="align">
           <v-card class="pa-5">
             <v-row>
               <v-avatar color="primary white--text">{{
@@ -39,31 +38,39 @@
 </template>
 
 <script>
-import ToolBar from '../components/ToolBar.vue'
 export default {
+  props: ['id'],
   data() {
-    return { id: parseInt(this.$route.params.id) }
+    return {
+      user_id: parseInt(this.id)
+    }
   },
-  components: {
-    ToolBar
-  },
+  components: {},
   computed: {
     nameInitials() {
-      let retName = this.$store.state.users.users.filter(
-        (users) => users.id === this.id
+      let arr = this.$store.state.users.users.filter(
+        (users) => users.id === this.user_id
       )
 
-      return retName[0].name[0]
+      let name = arr[0].name.split(' ')
+      // console.log('Nome: ' + name)
+
+      if (name.length > 1) {
+        // console.log(name.charAt(0) + name.charAt(0))
+        return name[0].charAt(0) + name[name.length - 1].charAt(0)
+      } else {
+        return name[0].charAt(0)
+      }
     },
     userPublications() {
-      console.log('ID: ' + this.id)
-      console.log(
-        this.$store.state.content.publications.filter(
-          (publications) => publications.user_id === this.id
-        )
-      )
+      // console.log('ID: ' + this.id)
+      // console.log(
+      //   this.$store.state.content.publications.filter(
+      //     (publications) => publications.user_id === this.user_id
+      //   )
+      // )
       return this.$store.state.content.publications.filter(
-        (publications) => publications.user_id === this.id
+        (publications) => publications.user_id === this.user_id
       )
     }
   },

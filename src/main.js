@@ -7,7 +7,6 @@ import VueRouter from 'vue-router'
 import Users from './pages/Users.vue'
 import Profiles from './pages/Profiles.vue'
 import Home from './pages/Home.vue'
-import UserPublication from './pages/UserPublications.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
 
@@ -21,19 +20,23 @@ const users = {
     users: [
       {
         name: 'Fulano da Silva',
-        id: 0
+        id: 0,
+        public: false
       },
       {
         name: 'Beltrano dos Santos',
-        id: 2
+        id: 2,
+        public: false
       },
       {
         name: 'Cicrano Zezinho',
-        id: 3
+        id: 3,
+        public: false
       },
       {
         name: 'Jonathan Kilner',
-        id: 4
+        id: 4,
+        public: true
       }
     ]
   }
@@ -60,7 +63,7 @@ const content = {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
         name: 'Fulano da silva',
         user_id: 0,
-        id: 1
+        id: 2
       }
     ],
     id: 2
@@ -143,16 +146,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/profiles',
+    path: '/profiles/:id',
     component: Profiles
   },
   {
     path: '/users',
     component: Users
-  },
-  {
-    path: '/publication/:id',
-    component: UserPublication
   }
 ]
 
