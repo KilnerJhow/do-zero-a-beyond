@@ -1,5 +1,6 @@
 <template>
-  <v-main class="grey lighten-4">
+  <v-main class="background">
+    <v-btn @click="test()">aaaaaaaa</v-btn>
     <tool-bar
       :lightState="$store.state.dark_mode"
       @change-light-mode="changeLightMode($event)"
@@ -27,12 +28,6 @@ import AddPublication from '../components/AddPublication.vue'
 export default {
   name: 'App',
 
-  computed: {
-    reversePublication() {
-      return this.publications.slice().reverse()
-    }
-  },
-
   components: {
     ToolBar,
     Publications,
@@ -44,15 +39,9 @@ export default {
   },
   methods: {
     changeContent(content) {
-      // let objIndex = this.publications.findIndex(
-      //   (obj) => obj.id == content.index
-      // )
-      // this.publications[objIndex].text = content.text
       this.$store.dispatch('content/changePublication', content)
     },
     removeContent(index) {
-      // let objIndex = this.publications.findIndex((obj) => obj.id == index)
-      // this.publications.splice(objIndex, 1)
       this.$store.dispatch('content/deletePublication', index)
     },
     addContent(content) {
@@ -62,7 +51,6 @@ export default {
         id: this.id
       }
       this.$store.dispatch('content/addPublication', temp)
-      this.$store.dispatch('content/increaseID')
     },
     deleteAllContent(content) {
       if (content == 'y') {
@@ -71,6 +59,10 @@ export default {
     },
     changeLightMode(dark_mode) {
       this.$store.dispatch('lightMode', dark_mode)
+    },
+    test() {
+      let index = 4
+      console.log(this.$store.getters['content/getPublicationByUserId'](index))
     }
   }
 }

@@ -8,9 +8,12 @@ import Users from './pages/Users.vue'
 import Profiles from './pages/Profiles.vue'
 import Home from './pages/Home.vue'
 import UserPublication from './pages/UserPublications.vue'
+import colors from 'vuetify/lib/util/colors'
+import Vuetify from 'vuetify/lib/framework'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
+Vue.use(Vuetify)
 
 const users = {
   namespaced: true,
@@ -27,6 +30,10 @@ const users = {
       {
         name: 'Cicrano Zezinho',
         id: 3
+      },
+      {
+        name: 'Jonathan Kilner',
+        id: 4
       }
     ]
   }
@@ -40,11 +47,19 @@ const content = {
         text:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nibh. Donec volutpat tellus vel maximus scelerisque. Curabitur mattis odio lectus, non lacinia nisl imperdiet a. Pellentesque consectetur sapien lorem, id porta purus luctus nec. Aliquam sodales risus at lobortis dignissim. Mauris consectetur consectetur leo varius dictum. Sed euismod massa et arcu interdum interdum. Nulla ac sapien dolor. Maecenas id tortor urna. In mattis suscipit cursus. In eget accumsan tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse volutpat fringilla erat, a convallis nulla efficitur id. Morbi placerat luctus diam, placerat hendrerit est laoreet at.',
         name: 'Jonathan Kilner',
+        user_id: 4,
         id: 0
       },
       {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
         name: 'Fulano da silva',
+        user_id: 0,
+        id: 1
+      },
+      {
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+        name: 'Fulano da silva',
+        user_id: 0,
         id: 1
       }
     ],
@@ -53,6 +68,7 @@ const content = {
   actions: {
     addPublication({ commit }, payload) {
       commit('addContent', payload)
+      commit('addID')
     },
     deletePublication({ commit }, payload) {
       commit('deleteContent', payload)
@@ -63,13 +79,9 @@ const content = {
     deleteAllPublication({ commit }) {
       commit('deletePublications')
       commit('restartID')
-    },
-    increaseID({ commit }) {
-      commit('addID')
     }
   },
   mutations: {
-    //Atomica, sempre muda um valor por vez de state
     addContent(state, publication) {
       state.publications.unshift(publication)
     },
@@ -126,11 +138,11 @@ const routes = [
     component: Profiles
   },
   {
-    path: '/users/:id',
+    path: '/users',
     component: Users
   },
   {
-    path: '/publication',
+    path: '/publication/:id',
     component: UserPublication
   }
 ]
@@ -140,6 +152,29 @@ const router = new VueRouter({
 })
 
 Vue.config.productionTip = false
+
+export default new Vuetify({
+  icons: {
+    iconfont: 'mdi'
+  },
+  theme: {
+    themes: {
+      light: {
+        primary: colors.lightBlue,
+        secondary: colors.grey.darken1,
+        accent: colors.pink.darken1,
+        error: colors.red.accent3,
+        background: colors.indigo.lighten5,
+        info: colors.teal.darken1
+      },
+      dark: {
+        primary: colors.blue.darken4,
+        background: colors.indigo.base,
+        info: colors.teal.lighten1
+      }
+    }
+  }
+})
 
 new Vue({
   vuetify,

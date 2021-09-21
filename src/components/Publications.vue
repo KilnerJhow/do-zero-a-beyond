@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row no-gutters justify="center">
       <v-col lg="8">
-        <v-card flat class="pa-5">
+        <v-card outlined class="pa-5">
           <v-row>
             <v-avatar color="primary white--text">{{ nameInitials }}</v-avatar>
             <span class="pa-3">{{ publicationProp.name }}</span>

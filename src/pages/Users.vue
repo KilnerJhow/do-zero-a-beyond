@@ -3,9 +3,9 @@
     <v-list-item
       v-for="user of $store.state.users.users"
       :key="user.id"
-      @click="goToUser(user)"
+      @click="goToUserPublications(user)"
     >
-      <v-list-item-tile> {{ user.name }}</v-list-item-tile>
+      <v-list-item-title> {{ user.name }}</v-list-item-title>
     </v-list-item>
   </v-main>
 </template>
@@ -13,8 +13,8 @@
 <script>
 export default {
   methods: {
-    goToUser(user) {
-      this.$router.push(`/user/${user.id}`)
+    goToUserPublications(user) {
+      this.$router.push(`/publication/${user.id}`)
     }
   }
 }
