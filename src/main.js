@@ -10,7 +10,7 @@ import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
-import { auth } from './config/firebase.js'
+import { auth, provider } from './config/firebase.js'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -72,6 +72,34 @@ const users = {
         .catch((err) => {
           console.log(err)
           alert(err.message)
+        })
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    authenticateGoogle({ commit }) {
+      auth
+        .signInWithPopup(provider)
+        .then((res) => {
+          console.log(res)
+          commit('setUser', res.user)
+          router.push('/home')
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // const credential = GoogleAuthProvider.credentialFromResult(result)
+          // const token = credential.accessToken
+          // The signed-in user info.
+          // const user = result.user
+          // ...
+        })
+        .catch((error) => {
+          console.log(error)
+          // Handle Errors here.
+          // const errorCode = error.code
+          // const errorMessage = error.message
+          // The email of the user's account used.
+          // const email = error.email
+          // The AuthCredential type that was used.
+          // const credential = GoogleAuthProvider.credentialFromError(error)
+          // ...
         })
     }
   },

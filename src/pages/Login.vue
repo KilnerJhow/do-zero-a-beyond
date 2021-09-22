@@ -31,7 +31,7 @@
             </v-text-field>
             <v-card-actions>
               <v-btn @click="login()">Login</v-btn>
-              <v-btn>
+              <v-btn @click="loginGoogle()">
                 <v-icon>
                   mdi-google
                 </v-icon>
@@ -95,6 +95,10 @@ export default {
     }
   },
   methods: {
+    async loginGoogle() {
+      console.log('Logando com o google')
+      this.$store.dispatch('users/authenticateGoogle')
+    },
     async login() {
       console.log('Logando com as credenciais')
       this.$store.dispatch('users/authenticate', {
