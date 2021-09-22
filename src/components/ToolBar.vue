@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <v-app-bar flat class="primary">
+    <v-app-bar app elevate-on-scroll flat class="primary">
       <!-- <v-app-bar-nav-icon @click="leftDrawer = !leftDrawer" class="hidden-md-and-up"></v-app-bar-nav-icon> -->
       <v-toolbar-title class="text-uppercase" @click="goToHome()">
         <!-- <v-btn class="button"> -->
