@@ -7,6 +7,7 @@ import VueRouter from 'vue-router'
 import Users from './pages/Users.vue'
 import Profiles from './pages/Profiles.vue'
 import Home from './pages/Home.vue'
+import Login from './pages/Login.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
 
@@ -152,6 +153,10 @@ const routes = [
   {
     path: '/users',
     component: Users
+  },
+  {
+    path: '/login',
+    component: Login
   }
 ]
 
