@@ -1,8 +1,8 @@
 <template>
   <v-main>
-    <v-app-bar flat plain>
+    <v-app-bar flat plain class="transparent">
       <v-spacer></v-spacer>
-      <v-btn text>
+      <v-btn text @click="darkMode()">
         <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
     </v-app-bar>
@@ -44,7 +44,7 @@
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-card-title class="grey lighten-2">
+                  <v-card-title class="info white--text">
                     Criar nova conta
                   </v-card-title>
                   <v-text-field
@@ -108,6 +108,10 @@ export default {
         email: this.newAccEmailField,
         password: this.newAccPasswordField
       })
+    },
+    darkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.$store.dispatch('lightMode', this.$vuetify.theme.dark)
     }
   }
 }
