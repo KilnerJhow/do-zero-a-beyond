@@ -12,9 +12,7 @@ export default {
     return {}
   },
   mounted() {
-    const theme = this.$store.state.dark_mode
-    // console.log('Dark mode: ' + theme)
-    this.$vuetify.theme.dark = theme
+    this.$vuetify.theme.dark = this.$store.state.dark_mode
   }
 }
 </script>

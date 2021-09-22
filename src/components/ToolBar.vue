@@ -66,7 +66,7 @@ export default {
       if (this.$route.path != '/users') this.$router.push(`/users`)
     },
     goToHome() {
-      if (this.$route.path != '/') this.$router.push('/')
+      if (this.$route.path != '/home') this.$router.push('/home')
     }
   }
 }

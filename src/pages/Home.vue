@@ -47,6 +47,11 @@ export default {
         this.$store.dispatch('content/deleteAllPublication')
       }
     }
+  },
+  mounted() {
+    if (this.$store.state.users.loggedUser == null) {
+      this.$router.push('/')
+    }
   }
 }
 </script>

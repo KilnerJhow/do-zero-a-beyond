@@ -62,6 +62,11 @@ export default {
       console.log(arr)
       return arr[0].public
     }
+  },
+  mounted() {
+    if (this.$store.state.users.loggedUser == null) {
+      this.$router.push('/')
+    }
   }
 }
 </script>

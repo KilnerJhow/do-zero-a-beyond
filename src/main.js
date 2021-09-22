@@ -10,6 +10,7 @@ import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
+import { auth } from './config/firebase.js'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -39,7 +40,45 @@ const users = {
         id: 4,
         public: true
       }
-    ]
+    ],
+    loggedUser: null
+  },
+  actions: {
+    // eslint-disable-next-line no-unused-vars
+    createAccount({ commit }, payload) {
+      const { email, password } = payload
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          console.log(res)
+          commit('setUser', res.user)
+          router.push('/home')
+        })
+        .catch((err) => {
+          console.log(err)
+          alert(err.message)
+        })
+    },
+    // eslint-disable-next-line no-unused-vars
+    authenticate({ commit }, payload) {
+      const { email, password } = payload
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then((res) => {
+          console.log(res)
+          commit('setUser', res.user)
+          router.push('/home')
+        })
+        .catch((err) => {
+          console.log(err)
+          alert(err.message)
+        })
+    }
+  },
+  mutations: {
+    setUser(state, user) {
+      state.loggedUser = user
+    }
   }
 }
 
@@ -143,7 +182,7 @@ const store = new Vuex.Store({
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     component: Home
   },
   {
@@ -155,7 +194,7 @@ const routes = [
     component: Users
   },
   {
-    path: '/login',
+    path: '/',
     component: Login
   }
 ]
