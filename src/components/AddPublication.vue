@@ -3,8 +3,10 @@
     <v-row justify="center" no-gutters>
       <v-col lg="8" class="mt-4">
         <v-card outlined class="pa-5">
-          <v-avatar color="primary white--text">JK</v-avatar>
-          <span class="pa-3">Jonathan Kilner</span>
+          <v-avatar color="primary white--text">
+            <img :src="photo" alt="" />
+          </v-avatar>
+          <span class="pa-3">{{ this.name }}</span>
           <v-textarea
             v-model="text"
             auto-grow
@@ -27,7 +29,9 @@
 export default {
   data() {
     return {
-      text: ''
+      text: '',
+      name: this.$store.state.users.loggedUser.displayName,
+      photo: this.$store.state.users.loggedUser.photoURL
     }
   },
   methods: {
@@ -35,8 +39,8 @@ export default {
       if (this.text.trim() != '') {
         let publication = {
           text: this.text,
-          name: 'Jonathan Kilner',
-          user_id: 4
+          name: this.name,
+          user_id: this.$store.state.users.loggedUser.uid
         }
         // console.log("Adicionando " + this.text)
         this.$emit('publish', publication)

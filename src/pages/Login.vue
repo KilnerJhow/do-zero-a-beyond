@@ -56,18 +56,20 @@
                   ></v-text-field>
                   <v-text-field
                     ref="newPassword"
-                    :rules="newPasswordRules"
+                    :rules="[rules.required, rules.password]"
                     label="Digite sua senha"
-                    type="password"
+                    :type="marker ? 'text' : 'password'"
                     class="pa-5"
                     v-model="newAccPasswordField"
+                    append-icon="mdi-eye"
+                    @click:append="togglePasswordVisibility"
                   ></v-text-field>
                   <v-card-actions>
                     <v-btn text color="primary" @click="createAccount()">
                       Criar
                     </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn text color="red">
+                    <v-btn text color="red" @click="closeDialog()">
                       Cancelar
                     </v-btn>
                   </v-card-actions>
@@ -90,8 +92,24 @@ export default {
       newAccEmailField: '',
       newAccPasswordField: '',
       dialog: false,
+      marker: false,
+      rules: {
+        required: (value) => !!value || 'Required.',
+        password: (value) => {
+          const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%&])(?=.{8,})/
+          return (
+            pattern.test(value) ||
+            'Min. 8 characters with at least one capital letter, a number and a special character.'
+          )
+        }
+      },
       newPasswordRules: [(v) => !!v || 'É preciso uma senha!'],
-      newEmailRules: [(v) => !!v || 'Digite seu email']
+      newEmailRules: [
+        (v) => !!v || 'Digite seu email',
+        (v) =>
+          (!!v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) ||
+          'E-mail must be valid'
+      ]
     }
   },
   methods: {
@@ -116,6 +134,15 @@ export default {
     darkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
       this.$store.dispatch('lightMode', this.$vuetify.theme.dark)
+    },
+    togglePasswordVisibility() {
+      // console.log(this.marker)
+      this.marker = !this.marker
+    },
+    closeDialog() {
+      this.dialog = false
+      this.newAccPasswordField = ''
+      this.newAccEmailField = ''
     }
   }
 }

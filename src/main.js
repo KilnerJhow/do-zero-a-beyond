@@ -11,6 +11,7 @@ import Login from './pages/Login.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
 import { auth, provider } from './config/firebase.js'
+import { getAuth, signOut } from 'firebase/auth'
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -101,10 +102,26 @@ const users = {
           // const credential = GoogleAuthProvider.credentialFromError(error)
           // ...
         })
+    },
+    // eslint-disable-next-line no-unused-vars
+    signOut({ commit }) {
+      let userAuth = getAuth()
+      signOut(userAuth)
+        .then(() => {
+          console.log('Logout bem sucedido')
+          commit('setUser', null)
+          router.push('/')
+        })
+        .catch((error) => {
+          console.log('Erro')
+          console.log(error)
+        })
     }
   },
   mutations: {
     setUser(state, user) {
+      console.log('IN USER')
+      console.log(user)
       state.loggedUser = user
     }
   }

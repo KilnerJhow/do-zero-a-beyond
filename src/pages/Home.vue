@@ -50,6 +50,8 @@ export default {
   },
   mounted() {
     if (this.$store.state.users.loggedUser == null) {
+      console.log('Router')
+      console.log(this.$store.state.users.loggedUser)
       this.$router.push('/')
     }
   }
