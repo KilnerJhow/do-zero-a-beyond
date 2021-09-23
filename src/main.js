@@ -248,6 +248,12 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/' && store.state.users.loggedUser === null) {
+    next({ path: '/' })
+  } else next()
+})
+
 Vue.config.productionTip = false
 
 export default new Vuetify({
