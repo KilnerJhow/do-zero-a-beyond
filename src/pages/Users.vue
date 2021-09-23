@@ -21,11 +21,6 @@ export default {
   },
   components: {
     ToolBar
-  },
-  mounted() {
-    if (this.$store.state.users.loggedUser == null) {
-      this.$router.push('/')
-    }
   }
 }
 </script>
