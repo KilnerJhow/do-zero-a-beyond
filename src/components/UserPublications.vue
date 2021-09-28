@@ -2,16 +2,19 @@
   <v-main>
     <v-container
       fluid
-      v-for="(publication, index) in userPublications"
+      v-for="(publication, index) in this.publications"
       :key="index"
     >
       <v-row no-gutters justify="center">
         <v-col lg="8" md="8" class="align">
           <v-card class="pa-5">
             <v-row>
-              <v-avatar color="primary white--text">{{
-                nameInitials
-              }}</v-avatar>
+              <v-avatar v-if="photoNotNull">
+                <img :src="photo" />
+              </v-avatar>
+              <v-avatar v-else color="primary white--text">
+                {{ nameInitials }}
+              </v-avatar>
               <span class="pa-3">{{ publication.name }}</span>
             </v-row>
             <v-row>
@@ -38,50 +41,54 @@
 </template>
 
 <script>
+import { firestore } from '../config/firebase.js'
 export default {
-  props: ['id'],
+  props: ['id', 'name', 'photoURL'],
   data() {
     return {
-      user_id: parseInt(this.id)
+      publications: []
+      // photo: this.photoURL
     }
   },
   components: {},
   computed: {
     nameInitials() {
-      let arr = this.$store.state.users.users.filter(
-        (users) => users.id === this.user_id
-      )
-
-      let name = arr[0].name.split(' ')
-      // console.log('Nome: ' + name)
-
+      let name = this.name.split(' ')
+      let ret = ''
       if (name.length > 1) {
-        // console.log(name.charAt(0) + name.charAt(0))
-        return name[0].charAt(0) + name[name.length - 1].charAt(0)
+        ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
+        return ret.toUpperCase()
       } else {
-        return name[0].charAt(0)
+        ret = name[0].charAt(0)
+        return ret
       }
     },
-    userPublications() {
-      // console.log('ID: ' + this.id)
-      // console.log(
-      //   this.$store.state.content.publications.filter(
-      //     (publications) => publications.user_id === this.user_id
-      //   )
-      // )
-      return this.$store.state.content.publications.filter(
-        (publications) => publications.user_id === this.user_id
-      )
+    photoNotNull() {
+      if (this.photo != null) {
+        console.log('Photo not null ' + this.photo)
+        return true
+      } else {
+        return false
+      }
+    },
+    photo() {
+      console.log('Retornando a foto: ' + this.photoURL)
+      return this.photoURL
     }
   },
-  methods: {
-    // test() {
-    //   let retName = this.$store.state.users.users.filter(
-    //     (users) => users.id === this.id
-    //   )
-    //   console.log('retName: ')
-    //   console.log(retName[0].name[0])
-    // }
+  methods: {},
+  created() {
+    console.log('URL da foto ' + this.photo)
+    firestore
+      .collection('publications')
+      .where('user_id', '==', this.id)
+      .get()
+      .then((query) => {
+        query.forEach((doc) => {
+          // console.log(doc.data())
+          this.publications.push(doc.data())
+        })
+      })
   }
 }
 </script>

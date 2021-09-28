@@ -10,7 +10,7 @@ import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
-import { auth, provider } from './config/firebase.js'
+import { auth, provider, firestore, timestamp } from './config/firebase.js'
 import { getAuth, signOut } from 'firebase/auth'
 
 Vue.use(Vuex)
@@ -20,39 +20,47 @@ Vue.use(Vuetify)
 const users = {
   namespaced: true,
   state: {
-    users: [
-      {
-        name: 'Fulano da Silva',
-        id: 0,
-        public: false
-      },
-      {
-        name: 'Beltrano dos Santos',
-        id: 2,
-        public: false
-      },
-      {
-        name: 'Cicrano Zezinho',
-        id: 3,
-        public: false
-      },
-      {
-        name: 'Jonathan Kilner',
-        id: 4,
-        public: true
-      }
-    ],
     loggedUser: null
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
-    createAccount({ commit }, payload) {
+    async createAccount({ commit }, payload) {
       const { email, password } = payload
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          console.log(res)
+          // console.log(res)
+          commit('saveUser', res.user)
           commit('setUser', res.user)
+          // let user = {
+          //   displayName: res.user.displayName,
+          //   email: res.user.email,
+          //   uid: res.user.uid,
+          //   photoURL: res.user.photoURL
+          // }
+          // try {
+          //   firestore
+          //     .collection('users')
+          //     .get(user.uid)
+          //     .then((doc) => {
+          //       if (doc.exists) {
+          //         console.log('Usuário já existe!')
+          //       } else {
+          //         console.log('Usuário não existente')
+          //       }
+          //     })
+          //     .catch((error) => {
+          //       console.log(error)
+          //     })
+          //   firestore
+          //     .collection('users')
+          //     .doc(user.uid)
+          //     .set(user)
+          //   console.log('Inserido no firestore com sucesso!')
+          // } catch (error) {
+          //   console.log(error)
+          // }
+
           router.push('/home')
         })
         .catch((err) => {
@@ -81,26 +89,45 @@ const users = {
       auth
         .signInWithPopup(provider)
         .then((res) => {
-          console.log(res)
+          // console.log(res.user)
           commit('setUser', res.user)
+          commit('saveUser', res.user)
+          // let user = {
+          //   displayName: res.user.displayName,
+          //   email: res.user.email,
+          //   uid: res.user.uid,
+          //   photoURL: res.user.photoURL
+          // }
+          // try {
+          //   console.log('User id: ' + user.uid)
+          //   let existentUser = false
+          //   firestore
+          //     .collection('users')
+          //     .doc(user.uid)
+          //     .get()
+          //     .then((doc) => {
+          //       if (doc.data()) {
+          //         existentUser = true
+          //       }
+          //     })
+          //     .catch((error) => {
+          //       console.log(error)
+          //     })
+          //   if (existentUser) {
+          //     firestore
+          //       .collection('users')
+          //       .doc(user.uid)
+          //       .set(user)
+          //     console.log('Inserido no firestore com sucesso!')
+          //   }
+          // } catch (error) {
+          //   console.log(error)
+          // }
+
           router.push('/home')
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // const credential = GoogleAuthProvider.credentialFromResult(result)
-          // const token = credential.accessToken
-          // The signed-in user info.
-          // const user = result.user
-          // ...
         })
         .catch((error) => {
           console.log(error)
-          // Handle Errors here.
-          // const errorCode = error.code
-          // const errorMessage = error.message
-          // The email of the user's account used.
-          // const email = error.email
-          // The AuthCredential type that was used.
-          // const credential = GoogleAuthProvider.credentialFromError(error)
-          // ...
         })
     },
     // eslint-disable-next-line no-unused-vars
@@ -120,49 +147,89 @@ const users = {
   },
   mutations: {
     setUser(state, user) {
-      console.log('IN USER')
-      console.log(user)
+      // console.log('IN USER')
+      // console.log(user)
       state.loggedUser = user
+    },
+    saveUser(state, payload) {
+      let user = {
+        displayName: payload.displayName,
+        email: payload.email,
+        uid: payload.uid,
+        photoURL: payload.photoURL
+      }
+      try {
+        let existentUser = false
+        firestore
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((doc) => {
+            if (doc.data()) {
+              existentUser = true
+              console.log('Usuário existente')
+            } else {
+              console.log('Usuário não existente')
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        if (existentUser) {
+          firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(user)
+          console.log('Inserido no firestore com sucesso!')
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
 
 const content = {
   namespaced: true,
-  state: {
-    publications: [
-      {
-        text:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nibh. Donec volutpat tellus vel maximus scelerisque. Curabitur mattis odio lectus, non lacinia nisl imperdiet a. Pellentesque consectetur sapien lorem, id porta purus luctus nec. Aliquam sodales risus at lobortis dignissim. Mauris consectetur consectetur leo varius dictum. Sed euismod massa et arcu interdum interdum. Nulla ac sapien dolor. Maecenas id tortor urna. In mattis suscipit cursus. In eget accumsan tellus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse volutpat fringilla erat, a convallis nulla efficitur id. Morbi placerat luctus diam, placerat hendrerit est laoreet at.',
-        name: 'Jonathan Kilner',
-        user_id: 4,
-        id: 0
-      },
-      {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
-        name: 'Fulano da silva',
-        user_id: 0,
-        id: 1
-      },
-      {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
-        name: 'Fulano da silva',
-        user_id: 0,
-        id: 2
-      }
-    ],
-    id: 2
-  },
+  state: {},
   actions: {
-    addPublication({ commit }, payload) {
-      commit('addContent', payload)
-      commit('addID')
+    // eslint-disable-next-line no-unused-vars
+    async addPublication({ commit }, payload) {
+      try {
+        payload.createdAt = timestamp
+        await firestore.collection('publications').add(payload)
+        console.log('Inserido no firestore com sucesso!')
+      } catch (error) {
+        console.log(error)
+      }
     },
-    deletePublication({ commit }, payload) {
+    async deletePublication({ commit }, payload) {
+      try {
+        await firestore
+          .collection('publications')
+          .doc(payload)
+          .delete()
+        console.log('Excluido com sucesso')
+      } catch (error) {
+        console.log(error)
+      }
       commit('deleteContent', payload)
     },
-    changePublication({ commit }, payload) {
-      commit('changeContent', payload)
+    // eslint-disable-next-line no-unused-vars
+    async changePublication({ commit }, payload) {
+      try {
+        await firestore
+          .collection('publications')
+          .doc(payload.idPublication)
+          .update({
+            text: payload.text
+          })
+        console.log('Modificado com sucesso')
+      } catch (error) {
+        console.log(error)
+      }
+
+      // commit('changeContent', payload)
     },
     deleteAllPublication({ commit }) {
       commit('deletePublications')

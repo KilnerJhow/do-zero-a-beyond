@@ -1,12 +1,12 @@
 <template>
   <v-main>
-    <v-app-bar flat plain class="transparent">
+    <v-app-bar flat class="transparent">
       <v-spacer></v-spacer>
       <v-btn text @click="darkMode()">
         <v-icon>mdi-brightness-6</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-container class="fill-height" fluid>
+    <v-container class="ma-0 pa-0 fill-height" fluid>
       <v-row no-gutters class="d-flex justify-center alignt-center">
         <v-col lg="4" md="6" sm="8">
           <div class="d-flex justify-center">

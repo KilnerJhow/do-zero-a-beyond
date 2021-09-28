@@ -4,12 +4,23 @@
       <v-col lg="8">
         <v-card outlined class="pa-5">
           <v-row>
-            <v-avatar color="primary white--text">{{ nameInitials }}</v-avatar>
+            <v-avatar v-if="photoNotNull">
+              <img :src="this.photo" alt="JK" />
+            </v-avatar>
+            <v-avatar v-else color="primary white--text">{{
+              nameInitials
+            }}</v-avatar>
             <span class="pa-3">{{ publicationProp.name }}</span>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog_edit" width="700">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" text @click="showContent()">
+                <v-btn
+                  v-if="userPublication"
+                  v-bind="attrs"
+                  v-on="on"
+                  text
+                  @click="showContent()"
+                >
                   <v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
               </template>
@@ -38,7 +49,13 @@
             </v-dialog>
             <v-dialog v-model="dialog_delete" width="500">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" text retain-focus-on-click>
+                <v-btn
+                  v-if="userPublication"
+                  v-bind="attrs"
+                  v-on="on"
+                  text
+                  retain-focus-on-click
+                >
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </template>
@@ -82,6 +99,7 @@
 </template>
 
 <script>
+import { firestore } from '../config/firebase.js'
 export default {
   computed: {
     nameInitials() {
@@ -95,14 +113,31 @@ export default {
         ret = name[0].charAt(0)
         return ret
       }
+    },
+    photoNotNull() {
+      if (this.photo != null) {
+        return true
+      } else {
+        return false
+      }
+    },
+    userPublication() {
+      if (
+        this.publicationProp.user_id == this.$store.state.users.loggedUser.uid
+      ) {
+        return true
+      }
+      return false
     }
   },
-  props: ['publicationProp'],
+  props: ['publicationProp', 'idProp'],
   data() {
     return {
       dialog_delete: false,
       dialog_edit: false,
-      textField: ''
+      textField: '',
+      photo: null,
+      name: this.publicationProp.name
     }
   },
   methods: {
@@ -110,14 +145,15 @@ export default {
       // console.log("Enviado ao main: " + this.textField)
       let content = {
         text: this.textField,
-        index: this.publicationProp.id
+        idPublication: this.idProp
       }
       this.dialog_edit = false
+      console.log('ID da publicação: ' + this.idProp)
       this.$emit('change-content', content)
     },
     removeContent() {
       // console.log("Removendo conteúdo " + this.publicationProp.id)
-      this.$emit('remove-content', this.publicationProp.id)
+      this.$emit('remove-content', this.idProp)
       this.dialog_delete = false
     },
     showContent() {
@@ -128,7 +164,27 @@ export default {
     },
     closeDialogEdit() {
       this.dialog_edit = false
+    },
+    test() {
+      console.log('Publication id ' + this.publicationProp.user_id)
+      console.log('User id ' + this.$store.state.users.loggedUser.uid)
     }
+  },
+  created() {
+    firestore
+      .collection('users')
+      .doc(this.publicationProp.user_id)
+      .get()
+      .then((doc) => {
+        if (doc.data()) {
+          // console.log('DOC: ')
+          // console.log(doc.data())
+          this.photo = doc.data().photoURL
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 </script>
