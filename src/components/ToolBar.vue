@@ -8,10 +8,13 @@
         </button>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-avatar class="mr-4">
-          <img v-if="photoNotNull" :src="this.photo" alt="JK" />
+      <v-btn icon @click="goToMyProfile()">
+        <v-avatar v-if="photoNotNull">
+          <img :src="this.photo" alt="JK" />
         </v-avatar>
+        <v-avatar v-else color="primary lighten-1 white--text">{{
+          nameInitials
+        }}</v-avatar>
       </v-btn>
       <span class="white--text pa-3">{{ this.name }}</span>
 
@@ -75,6 +78,7 @@ export default {
       dialog_delete_toolbar: false,
       photo: this.$store.state.users.loggedUser.photoURL,
       name: this.$store.state.users.loggedUser.displayName,
+      uid: this.$store.state.users.loggedUser.uid,
       items: [
         { name: 'Tema', icon: 'mdi-brightness-6' },
         { name: 'Usuários', icon: 'mdi-account-multiple' },
@@ -86,6 +90,18 @@ export default {
     }
   },
   computed: {
+    nameInitials() {
+      let name = this.name.split(' ')
+      let ret = ''
+      if (name.length > 1) {
+        // console.log(name[0].charAt(0) + name[1].charAt(0))
+        ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
+        return ret.toUpperCase()
+      } else {
+        ret = name[0].charAt(0)
+        return ret
+      }
+    },
     photoNotNull() {
       if (this.photo == null) {
         return false
@@ -125,6 +141,10 @@ export default {
           this.$store.dispatch('users/signOut')
           break
       }
+    },
+    goToMyProfile() {
+      console.log('Toolbar test icon button')
+      this.$router.push(`/myprofile/${this.uid}`)
     }
   }
 }

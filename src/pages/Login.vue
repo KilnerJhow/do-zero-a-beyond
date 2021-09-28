@@ -48,6 +48,12 @@
                     Criar nova conta
                   </v-card-title>
                   <v-text-field
+                    v-model="displayName"
+                    label="Digite seu nome"
+                    class="pa-5"
+                  >
+                  </v-text-field>
+                  <v-text-field
                     label="Digite seu login"
                     :rules="newEmailRules"
                     class="pa-5"
@@ -91,6 +97,7 @@ export default {
       passwordField: '',
       newAccEmailField: '',
       newAccPasswordField: '',
+      displayName: '',
       dialog: false,
       marker: false,
       rules: {
@@ -108,7 +115,7 @@ export default {
         (v) => !!v || 'Digite seu email',
         (v) =>
           (!!v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) ||
-          'E-mail must be valid'
+          'O e-mail precisa ser válido'
       ]
     }
   },
@@ -128,7 +135,8 @@ export default {
       console.log('Criando nova conta')
       this.$store.dispatch('users/createAccount', {
         email: this.newAccEmailField,
-        password: this.newAccPasswordField
+        password: this.newAccPasswordField,
+        displayName: this.displayName
       })
     },
     darkMode() {

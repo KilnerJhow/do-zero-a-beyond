@@ -8,6 +8,7 @@ import Users from './pages/Users.vue'
 import Profiles from './pages/Profiles.vue'
 import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
+import MyProfile from './pages/MyProfile.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
 import { auth, provider, firestore, timestamp } from './config/firebase.js'
@@ -26,40 +27,28 @@ const users = {
     // eslint-disable-next-line no-unused-vars
     async createAccount({ commit }, payload) {
       const { email, password } = payload
-      auth
+      await auth
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
-          // console.log(res)
-          commit('saveUser', res.user)
-          commit('setUser', res.user)
-          // let user = {
-          //   displayName: res.user.displayName,
-          //   email: res.user.email,
-          //   uid: res.user.uid,
-          //   photoURL: res.user.photoURL
-          // }
-          // try {
-          //   firestore
-          //     .collection('users')
-          //     .get(user.uid)
-          //     .then((doc) => {
-          //       if (doc.exists) {
-          //         console.log('Usuário já existe!')
-          //       } else {
-          //         console.log('Usuário não existente')
-          //       }
-          //     })
-          //     .catch((error) => {
-          //       console.log(error)
-          //     })
-          //   firestore
-          //     .collection('users')
-          //     .doc(user.uid)
-          //     .set(user)
-          //   console.log('Inserido no firestore com sucesso!')
-          // } catch (error) {
-          //   console.log(error)
-          // }
+          res.user
+            .updateProfile({ displayName: payload.displayName, photoURL: null })
+            .then((ret) => {
+              console.log('Sucesso!')
+              console.log(ret)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+          console.log('Criacao bem sucedida!')
+          let infoUser = {
+            displayName: payload.displayName,
+            email: payload.email,
+            uid: res.user.uid,
+            photoURL: null
+          }
+          console.log('User Data ' + infoUser)
+          commit('saveUser', infoUser)
+          commit('setUser', infoUser)
 
           router.push('/home')
         })
@@ -75,6 +64,7 @@ const users = {
         .signInWithEmailAndPassword(email, password)
         .then((res) => {
           console.log(res)
+
           commit('setUser', res.user)
           router.push('/home')
         })
@@ -92,37 +82,6 @@ const users = {
           // console.log(res.user)
           commit('setUser', res.user)
           commit('saveUser', res.user)
-          // let user = {
-          //   displayName: res.user.displayName,
-          //   email: res.user.email,
-          //   uid: res.user.uid,
-          //   photoURL: res.user.photoURL
-          // }
-          // try {
-          //   console.log('User id: ' + user.uid)
-          //   let existentUser = false
-          //   firestore
-          //     .collection('users')
-          //     .doc(user.uid)
-          //     .get()
-          //     .then((doc) => {
-          //       if (doc.data()) {
-          //         existentUser = true
-          //       }
-          //     })
-          //     .catch((error) => {
-          //       console.log(error)
-          //     })
-          //   if (existentUser) {
-          //     firestore
-          //       .collection('users')
-          //       .doc(user.uid)
-          //       .set(user)
-          //     console.log('Inserido no firestore com sucesso!')
-          //   }
-          // } catch (error) {
-          //   console.log(error)
-          // }
 
           router.push('/home')
         })
@@ -152,11 +111,14 @@ const users = {
       state.loggedUser = user
     },
     saveUser(state, payload) {
+      console.log('Salvando usuario')
+      console.log(payload)
       let user = {
         displayName: payload.displayName,
         email: payload.email,
         uid: payload.uid,
-        photoURL: payload.photoURL
+        photoURL: payload.photoURL,
+        public: true
       }
       try {
         let existentUser = false
@@ -175,7 +137,8 @@ const users = {
           .catch((error) => {
             console.log(error)
           })
-        if (existentUser) {
+        if (!existentUser) {
+          // console.log('Tentando salvar no firestore')
           firestore
             .collection('users')
             .doc(user.uid)
@@ -308,6 +271,10 @@ const routes = [
   {
     path: '/',
     component: Login
+  },
+  {
+    path: '/myprofile/:id',
+    component: MyProfile
   }
 ]
 
