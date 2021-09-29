@@ -180,7 +180,7 @@ export default {
           // console.log('DOC: ')
           // console.log(doc.data())
           this.photo = doc.data().photoURL
-          // console.log('Photo url ' + this.photo)
+          console.log('Photo url ' + this.photo)
         }
       })
       .catch((error) => {

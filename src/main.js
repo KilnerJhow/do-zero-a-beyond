@@ -11,7 +11,13 @@ import Login from './pages/Login.vue'
 import MyProfile from './pages/MyProfile.vue'
 import colors from 'vuetify/lib/util/colors'
 import Vuetify from 'vuetify/lib/framework'
-import { auth, provider, firestore, timestamp } from './config/firebase.js'
+import {
+  auth,
+  provider,
+  firestore,
+  timestamp,
+  storage
+} from './config/firebase.js'
 import { getAuth, signOut } from 'firebase/auth'
 
 Vue.use(Vuex)
@@ -21,7 +27,8 @@ Vue.use(Vuetify)
 const users = {
   namespaced: true,
   state: {
-    loggedUser: null
+    loggedUser: null,
+    url: null
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
@@ -30,27 +37,27 @@ const users = {
       await auth
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
+          console.log(res.user)
           res.user
             .updateProfile({ displayName: payload.displayName, photoURL: null })
-            .then((ret) => {
-              console.log('Sucesso!')
-              console.log(ret)
+            .then(() => {
+              // console.log('Sucesso!')
+              // console.log(ret)
+              console.log('Criacao bem sucedida!')
+              let infoUser = {
+                displayName: payload.displayName,
+                uid: res.user.uid,
+                public: true,
+                photoURL: null
+              }
+              // console.log('User Data ' + infoUser)
+              commit('saveUser', infoUser)
+              commit('setUser', res.user)
+              router.push('/home')
             })
             .catch((error) => {
               console.log(error)
             })
-          console.log('Criacao bem sucedida!')
-          let infoUser = {
-            displayName: payload.displayName,
-            email: payload.email,
-            uid: res.user.uid,
-            photoURL: null
-          }
-          console.log('User Data ' + infoUser)
-          commit('saveUser', infoUser)
-          commit('setUser', infoUser)
-
-          router.push('/home')
         })
         .catch((err) => {
           console.log(err)
@@ -59,6 +66,7 @@ const users = {
     },
     // eslint-disable-next-line no-unused-vars
     authenticate({ commit }, payload) {
+      console.log('Autenticando')
       const { email, password } = payload
       auth
         .signInWithEmailAndPassword(email, password)
@@ -80,8 +88,14 @@ const users = {
         .signInWithPopup(provider)
         .then((res) => {
           // console.log(res.user)
+          let user = {
+            displayName: res.user.displayName,
+            uid: res.user.uid,
+            public: true,
+            photoURL: res.user.photoURL
+          }
           commit('setUser', res.user)
-          commit('saveUser', res.user)
+          commit('saveUser', user)
 
           router.push('/home')
         })
@@ -102,24 +116,83 @@ const users = {
           console.log('Erro')
           console.log(error)
         })
+    },
+    // eslint-disable-next-line no-unused-vars
+    async changeProfileImg({ commit }, payload) {
+      // console.log(payload.file)
+      if (payload.file) {
+        const upload = await storage
+          .ref()
+          .child(`${payload.uid}/${+new Date()}`)
+          .put(payload.file)
+
+        await upload.ref.getDownloadURL().then((url) => {
+          console.log(url)
+          commit('changePhotoURL', { url: url, uid: payload.uid })
+        })
+      }
+    },
+    async changeUserName({ commit }, payload) {
+      console.log('Alterando nome: ' + payload.displayName)
+      await auth.currentUser
+        .updateProfile({ displayName: payload.displayName })
+        .then(() => {
+          console.log('Sucesso na alteração do nome')
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      commit('changeLoggedUserName', payload.displayName)
+    },
+    // eslint-disable-next-line no-unused-vars
+    async changeConfig({ commit }, payload) {
+      console.log('Alterando nome: ' + payload.public)
+      await firestore
+        .collection('users')
+        .doc(payload.uid)
+        .update({
+          public: payload.public
+        })
+      commit('changeConfig', payload.public)
     }
   },
   mutations: {
+    changeConfig(state, payload) {
+      state.loggedUser.public = payload
+    },
+    changeLoggedUserName(state, name) {
+      state.loggedUser.displayName = name
+      console.log(state.loggedUser.displayName)
+    },
+    async changePhotoURL(state, payload) {
+      state.loggedUser.photoURL = payload.url
+      await auth.currentUser
+        .updateProfile({
+          photoURL: payload.url
+        })
+        .then(() => {
+          console.log('Sucesso na troca de imagem!')
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      await firestore
+        .collection('users')
+        .doc(payload.uid)
+        .update({
+          photoURL: payload.url
+        })
+    },
     setUser(state, user) {
-      // console.log('IN USER')
-      // console.log(user)
       state.loggedUser = user
     },
-    saveUser(state, payload) {
+    saveUser(state, user) {
       console.log('Salvando usuario')
-      console.log(payload)
-      let user = {
-        displayName: payload.displayName,
-        email: payload.email,
-        uid: payload.uid,
-        photoURL: payload.photoURL,
-        public: true
-      }
+      console.log(user)
+      // let user = {
+      //   uid: payload.uid,
+      //   public: true
+      // }
       try {
         let existentUser = false
         firestore

@@ -79,6 +79,7 @@ export default {
   methods: {},
   created() {
     console.log('URL da foto ' + this.photo)
+    console.log('UID: ' + this.id)
     firestore
       .collection('publications')
       .where('user_id', '==', this.id)

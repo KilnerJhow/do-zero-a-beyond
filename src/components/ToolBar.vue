@@ -73,6 +73,9 @@
 
 <script>
 export default {
+  created() {
+    console.log(this.$store.state.users.loggedUser)
+  },
   data() {
     return {
       dialog_delete_toolbar: false,

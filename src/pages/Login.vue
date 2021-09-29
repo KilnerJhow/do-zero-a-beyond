@@ -27,6 +27,7 @@
               class="pb-5"
               v-model="passwordField"
               clearable
+              @keyup.enter="login()"
             >
             </v-text-field>
             <v-card-actions>
