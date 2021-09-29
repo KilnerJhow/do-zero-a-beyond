@@ -133,7 +133,8 @@ const users = {
       }
     },
     async changeUserName({ commit }, payload) {
-      console.log('Alterando nome: ' + payload.displayName)
+      console.log('Alterando nome: ')
+      console.log(payload)
       await auth.currentUser
         .updateProfile({ displayName: payload.displayName })
         .then(() => {
@@ -141,6 +142,15 @@ const users = {
         })
         .catch((error) => {
           console.log(error)
+        })
+      await firestore
+        .collection('users')
+        .doc(payload.uid)
+        .update({
+          displayName: payload.displayName
+        })
+        .then(() => {
+          console.log('Sucesso no firestore')
         })
       commit('changeLoggedUserName', payload.displayName)
     },
@@ -277,7 +287,7 @@ const content = {
       let publication = {
         text: payload.text,
         name: payload.name,
-        user_id: payload.user_id,
+        uid: payload.uid,
         id: state.id
       }
       console.log(publication)

@@ -15,7 +15,7 @@
               <v-avatar v-else color="primary white--text">
                 {{ nameInitials }}
               </v-avatar>
-              <span class="pa-3">{{ publication.name }}</span>
+              <span class="pa-3">{{ name }}</span>
             </v-row>
             <v-row>
               <v-card-text>
@@ -65,28 +65,27 @@ export default {
     },
     photoNotNull() {
       if (this.photo != null) {
-        console.log('Photo not null ' + this.photo)
+        // console.log('Photo not null ' + this.photo)
         return true
       } else {
         return false
       }
     },
     photo() {
-      console.log('Retornando a foto: ' + this.photoURL)
+      // console.log('Retornando a foto: ' + this.photoURL)
       return this.photoURL
     }
   },
   methods: {},
   created() {
-    console.log('URL da foto ' + this.photo)
-    console.log('UID: ' + this.id)
+    // console.log('URL da foto ' + this.photo)
+    // console.log('UID: ' + this.id)
     firestore
       .collection('publications')
-      .where('user_id', '==', this.id)
+      .where('uid', '==', this.id)
       .get()
       .then((query) => {
         query.forEach((doc) => {
-          // console.log(doc.data())
           this.publications.push(doc.data())
         })
       })

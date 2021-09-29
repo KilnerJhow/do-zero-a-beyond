@@ -4,6 +4,11 @@
     <v-container fluid>
       <v-row no-gutters justify="center">
         <v-col v-if="true" lg="8" md="8">
+          <v-row justify="center" class="ma-4">
+            <v-avatar size="100">
+              <v-img :src="this.user.photoURL"></v-img>
+            </v-avatar>
+          </v-row>
           <v-card class="pa-5">
             <v-card-title class="justify-center">
               <span v-if="infoLoaded">
@@ -88,10 +93,10 @@ export default {
       .get()
       .then((doc) => {
         if (doc.data()) {
-          console.log('Profile')
+          // console.log('Profile')
           this.user = {}
           this.user = doc.data()
-          console.log(this.user)
+          console.log(this.user.displayName)
         }
       })
   }

@@ -1,16 +1,20 @@
 <template>
   <v-container fluid>
-    <v-row no-gutters justify="center">
+    <v-skeleton-loader
+      v-if="!infoLoaded"
+      type="list-item-avatar, divider, article, actions"
+    ></v-skeleton-loader>
+    <v-row v-else no-gutters justify="center">
       <v-col lg="8">
         <v-card outlined class="pa-5">
           <v-row>
             <v-avatar v-if="photoNotNull">
-              <img :src="this.photo" alt="JK" />
+              <img :src="this.photoURL" alt="JK" />
             </v-avatar>
             <v-avatar v-else color="primary white--text">{{
               nameInitials
             }}</v-avatar>
-            <span class="pa-3">{{ publicationProp.name }}</span>
+            <span class="pa-3">{{ name }}</span>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog_edit" width="700">
               <template v-slot:activator="{ on, attrs }">
@@ -99,8 +103,17 @@
 </template>
 
 <script>
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 export default {
+  props: ['publicationProp', 'idProp', 'name', 'loaded', 'photoURL'],
+  data() {
+    return {
+      dialog_delete: false,
+      dialog_edit: false,
+      textField: '',
+      photo: null
+    }
+  },
   computed: {
     nameInitials() {
       let name = this.publicationProp.name.split(' ')
@@ -115,7 +128,7 @@ export default {
       }
     },
     photoNotNull() {
-      if (this.photo != null) {
+      if (this.photoURL != null) {
         return true
       } else {
         return false
@@ -128,21 +141,13 @@ export default {
         return true
       }
       return false
-    }
-  },
-  props: ['publicationProp', 'idProp'],
-  data() {
-    return {
-      dialog_delete: false,
-      dialog_edit: false,
-      textField: '',
-      photo: null,
-      name: this.publicationProp.name
+    },
+    infoLoaded() {
+      return this.loaded
     }
   },
   methods: {
     changeContent() {
-      // console.log("Enviado ao main: " + this.textField)
       let content = {
         text: this.textField,
         idPublication: this.idProp
@@ -152,7 +157,6 @@ export default {
       this.$emit('change-content', content)
     },
     removeContent() {
-      // console.log("Removendo conteúdo " + this.publicationProp.id)
       this.$emit('remove-content', this.idProp)
       this.dialog_delete = false
     },
@@ -169,23 +173,10 @@ export default {
       console.log('Publication id ' + this.publicationProp.user_id)
       console.log('User id ' + this.$store.state.users.loggedUser.uid)
     }
-  },
-  created() {
-    firestore
-      .collection('users')
-      .doc(this.publicationProp.user_id)
-      .get()
-      .then((doc) => {
-        if (doc.data()) {
-          // console.log('DOC: ')
-          // console.log(doc.data())
-          this.photo = doc.data().photoURL
-          console.log('Photo url ' + this.photo)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
   }
+  // created() {
+  //   console.log('Name na publicação ' + this.name)
+  //   console.log('Loaded: ' + this.loaded)
+  // }
 }
 </script>

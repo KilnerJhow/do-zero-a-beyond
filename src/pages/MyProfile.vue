@@ -49,7 +49,7 @@
         </v-row>
         <v-row justify="center" no-gutters>
           <v-card>
-            <v-card-title>
+            <v-card-title width="700">
               {{ this.name }}
               <v-dialog width="500" v-model="dialogEdit">
                 <template v-slot:activator="{ on, attrs }">

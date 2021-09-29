@@ -5,7 +5,10 @@
     <div v-for="(publication, index) in this.publications" :key="index">
       <publications
         :publicationProp="publication.data"
+        :name="publication.name"
         :idProp="publication.id"
+        :loaded="loaded"
+        :photoURL="publication.photoURL"
         @change-content="changeContent($event)"
         @remove-content="removeContent($event)"
       />
@@ -30,7 +33,8 @@ export default {
 
   data() {
     return {
-      publications: []
+      publications: [],
+      loaded: false
     }
   },
   methods: {
@@ -50,18 +54,30 @@ export default {
     }
   },
   created() {
+    this.loaded = false
     firestore
       .collection('publications')
       .orderBy('createdAt', 'desc')
       .onSnapshot((snap) => {
         this.publications = []
         snap.forEach((doc) => {
-          this.publications.push({
-            data: doc.data(),
-            id: doc.id
-          })
-          // this.publications.push(doc.data())
-          // console.log(doc.id)
+          // console.log('UID: ' + doc.data().uid)
+          // console.log(doc.data())
+          firestore
+            .collection('users')
+            .doc(doc.data().uid)
+            .get()
+            .then((ret) => {
+              // console.log('Name na home: ' + ret.data().displayName)
+              this.loaded = true
+              // console.log(ret.data())
+              this.publications.push({
+                data: doc.data(),
+                name: ret.data().displayName,
+                photoURL: ret.data().photoURL,
+                id: doc.id
+              })
+            })
         })
       })
   }

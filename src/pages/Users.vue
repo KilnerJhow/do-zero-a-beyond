@@ -37,7 +37,7 @@ export default {
         this.users = []
         console.log('Users')
         snap.forEach((doc) => {
-          console.log(doc.data())
+          // console.log(doc.data())
           this.users.push(doc.data())
           // this.publications.push(doc.data())
           // console.log(doc.id)

@@ -64,7 +64,7 @@ export default {
         let publication = {
           text: this.text,
           name: this.name,
-          user_id: this.$store.state.users.loggedUser.uid
+          uid: this.$store.state.users.loggedUser.uid
         }
         // console.log("Adicionando " + this.text)
         this.$emit('publish', publication)
