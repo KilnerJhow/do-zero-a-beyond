@@ -103,11 +103,14 @@
 </template>
 
 <script>
-// import { firestore } from '../config/firebase.js'
+import { firestore } from '../config/firebase.js'
 export default {
-  props: ['publicationProp', 'idProp', 'name', 'loaded', 'photoURL'],
+  props: ['publicationProp', 'idProp'],
   data() {
     return {
+      name: null,
+      photoURL: null,
+      loaded: false,
       dialog_delete: false,
       dialog_edit: false,
       textField: '',
@@ -116,16 +119,19 @@ export default {
   },
   computed: {
     nameInitials() {
-      let name = this.publicationProp.name.split(' ')
-      let ret = ''
-      if (name.length > 1) {
-        // console.log(name[0].charAt(0) + name[1].charAt(0))
-        ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
-        return ret.toUpperCase()
-      } else {
-        ret = name[0].charAt(0)
-        return ret
+      if (this.infoLoaded) {
+        let name = this.publicationProp.name.split(' ')
+        let ret = ''
+        if (name.length > 1) {
+          // console.log(name[0].charAt(0) + name[1].charAt(0))
+          ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
+          return ret.toUpperCase()
+        } else {
+          ret = name[0].charAt(0)
+          return ret
+        }
       }
+      return ''
     },
     photoNotNull() {
       if (this.photoURL != null) {
@@ -135,9 +141,7 @@ export default {
       }
     },
     userPublication() {
-      if (
-        this.publicationProp.user_id == this.$store.state.users.loggedUser.uid
-      ) {
+      if (this.publicationProp.uid == this.$store.state.users.loggedUser.uid) {
         return true
       }
       return false
@@ -173,10 +177,20 @@ export default {
       console.log('Publication id ' + this.publicationProp.user_id)
       console.log('User id ' + this.$store.state.users.loggedUser.uid)
     }
+  },
+  created() {
+    firestore
+      .collection('users')
+      .doc(this.publicationProp.uid)
+      .get()
+      .then((ret) => {
+        // console.log('Name na home: ' + ret.data().displayName)
+        this.loaded = true
+        this.name = ret.data().displayName
+        this.photoURL = ret.data().photoURL
+
+        // console.log(ret.data())
+      })
   }
-  // created() {
-  //   console.log('Name na publicação ' + this.name)
-  //   console.log('Loaded: ' + this.loaded)
-  // }
 }
 </script>

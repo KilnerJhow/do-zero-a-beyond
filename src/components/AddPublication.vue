@@ -6,9 +6,9 @@
           <v-avatar v-if="photoNotNull">
             <img :src="this.photo" alt="JK" />
           </v-avatar>
-          <v-avatar v-else color="primary white--text">{{
-            nameInitials
-          }}</v-avatar>
+          <v-avatar v-else color="primary white--text">
+            {{ nameInitials }}
+          </v-avatar>
           <span class="pa-3">{{ this.name }}</span>
           <v-textarea
             v-model="text"
@@ -63,7 +63,6 @@ export default {
       if (this.text.trim() != '') {
         let publication = {
           text: this.text,
-          name: this.name,
           uid: this.$store.state.users.loggedUser.uid
         }
         // console.log("Adicionando " + this.text)

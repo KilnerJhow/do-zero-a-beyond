@@ -199,10 +199,6 @@ const users = {
     saveUser(state, user) {
       console.log('Salvando usuario')
       console.log(user)
-      // let user = {
-      //   uid: payload.uid,
-      //   public: true
-      // }
       try {
         let existentUser = false
         firestore
@@ -243,6 +239,8 @@ const content = {
     async addPublication({ commit }, payload) {
       try {
         payload.createdAt = timestamp
+        console.log('Timestamp da pub: ')
+        console.log(timestamp.valueOf())
         await firestore.collection('publications').add(payload)
         console.log('Inserido no firestore com sucesso!')
       } catch (error) {

@@ -63,21 +63,10 @@ export default {
         snap.forEach((doc) => {
           // console.log('UID: ' + doc.data().uid)
           // console.log(doc.data())
-          firestore
-            .collection('users')
-            .doc(doc.data().uid)
-            .get()
-            .then((ret) => {
-              // console.log('Name na home: ' + ret.data().displayName)
-              this.loaded = true
-              // console.log(ret.data())
-              this.publications.push({
-                data: doc.data(),
-                name: ret.data().displayName,
-                photoURL: ret.data().photoURL,
-                id: doc.id
-              })
-            })
+          this.publications.push({
+            data: doc.data(),
+            id: doc.id
+          })
         })
       })
   }
