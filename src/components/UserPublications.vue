@@ -19,7 +19,7 @@
             </v-row>
             <v-row>
               <v-card-text>
-                {{ publication.text }}
+                {{ publication.data.text }}
               </v-card-text>
             </v-row>
             <v-row v-if="publicationHasImage(publication)">
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 export default {
   props: ['id', 'name', 'photoURL'],
   data() {
@@ -84,20 +84,42 @@ export default {
       if (publication.file) return true
 
       return false
+    },
+    async getUserPublications() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get('http://0.0.0.0:8081/publications', {
+          headers: {
+            Authorization: 'Bearer autenticado'
+          }
+        })
+        const data = req.data
+        data.forEach((doc) => {
+          if (doc.data.uid == this.id) {
+            this.publications.push({
+              data: doc.data,
+              id: doc.id
+            })
+          }
+        })
+        console.log(this.publications)
+      } catch (e) {
+        console.log(e)
+        alert(e)
+      }
     }
   },
   created() {
-    // console.log('URL da foto ' + this.photo)
-    // console.log('UID: ' + this.id)
-    firestore
-      .collection('publications')
-      .where('uid', '==', this.id)
-      .get()
-      .then((query) => {
-        query.forEach((doc) => {
-          this.publications.push(doc.data())
-        })
-      })
+    this.getUserPublications()
+    // firestore
+    //   .collection('publications')
+    //   .where('uid', '==', this.id)
+    //   .get()
+    //   .then((query) => {
+    //     query.forEach((doc) => {
+    //       this.publications.push(doc.data())
+    //     })
+    //   })
   }
 }
 </script>

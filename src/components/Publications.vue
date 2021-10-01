@@ -1,12 +1,12 @@
 <template>
   <v-container fluid>
-    <v-skeleton-loader
-      v-if="!infoLoaded"
-      type="list-item-avatar, divider, article, actions"
-    ></v-skeleton-loader>
-    <v-row v-else no-gutters justify="center">
+    <v-row no-gutters justify="center">
       <v-col lg="8">
-        <v-card outlined class="pa-5">
+        <v-skeleton-loader
+          v-if="!infoLoaded"
+          type="list-item-avatar, divider, article, actions"
+        ></v-skeleton-loader>
+        <v-card v-else outlined class="pa-5">
           <v-row>
             <v-avatar v-if="urlPhotoNotNull">
               <img :src="this.photoURL" alt="JK" />
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 export default {
   props: ['publicationProp', 'idProp'],
   data() {
@@ -184,21 +184,32 @@ export default {
     test() {
       console.log('Publication id ' + this.publicationProp.user_id)
       console.log('User id ' + this.$store.state.users.loggedUser.uid)
+    },
+    async getUserInfo() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get(
+          `http://0.0.0.0:8081/users/${this.publicationProp.uid}`,
+          {
+            headers: {
+              Authorization: 'Bearer autenticado'
+            }
+          }
+        )
+        this.loaded = true
+        this.name = req.data.displayName
+        this.photoURL = req.data.photoURL
+      } catch (e) {
+        console.log(e)
+        alert(e)
+      }
+
+      // console.log(req.data.displayName)
     }
   },
   created() {
-    firestore
-      .collection('users')
-      .doc(this.publicationProp.uid)
-      .get()
-      .then((ret) => {
-        // console.log('Name na home: ' + ret.data().displayName)
-        this.loaded = true
-        this.name = ret.data().displayName
-        this.photoURL = ret.data().photoURL
-
-        // console.log(ret.data())
-      })
+    this.loaded = false
+    this.getUserInfo()
   }
 }
 </script>

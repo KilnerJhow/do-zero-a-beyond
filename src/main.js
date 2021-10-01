@@ -272,18 +272,6 @@ const content = {
         }
       }
     },
-    // eslint-disable-next-line no-unused-vars
-    // async addPublication({ commit }, payload) {
-    //   try {
-    //     payload.createdAt = timestamp
-    //     console.log('Timestamp da pub: ')
-    //     console.log(timestamp.valueOf())
-    //     await firestore.collection('publications').add(payload)
-    //     console.log('Inserido no firestore com sucesso!')
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
     async deletePublication({ commit }, payload) {
       try {
         await firestore

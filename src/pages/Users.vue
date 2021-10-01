@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 import ToolBar from '../components/ToolBar.vue'
 export default {
   data() {
@@ -24,25 +24,35 @@ export default {
     goToProfile(user) {
       console.log(user.uid)
       this.$router.push(`/profiles/${user.uid}`)
+    },
+    async listAllUsers() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get('http://0.0.0.0:8081/users', {
+          headers: {
+            Authorization: 'Bearer autenticado'
+          }
+        })
+        const data = req.data
+        data.forEach((doc) => {
+          this.users.push({
+            uid: doc.uid,
+            displayName: doc.displayName,
+            photoURL: doc.photoURL
+          })
+        })
+        // console.log(this.users)
+      } catch (e) {
+        console.log(e)
+        alert(e)
+      }
     }
   },
   components: {
     ToolBar
   },
   created() {
-    firestore
-      .collection('users')
-      .get()
-      .then((snap) => {
-        this.users = []
-        console.log('Users')
-        snap.forEach((doc) => {
-          // console.log(doc.data())
-          this.users.push(doc.data())
-          // this.publications.push(doc.data())
-          // console.log(doc.id)
-        })
-      })
+    this.listAllUsers()
   }
 }
 </script>

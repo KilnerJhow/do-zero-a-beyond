@@ -7,7 +7,6 @@
         :publicationProp="publication.data"
         :name="publication.name"
         :idProp="publication.id"
-        :loaded="loaded"
         :photoURL="publication.photoURL"
         @change-content="changeContent($event)"
         @remove-content="removeContent($event)"
@@ -20,7 +19,7 @@
 import ToolBar from '../components/ToolBar.vue'
 import Publications from '../components/Publications.vue'
 import AddPublication from '../components/AddPublication.vue'
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 
 export default {
   name: 'App',
@@ -33,8 +32,7 @@ export default {
 
   data() {
     return {
-      publications: [],
-      loaded: false
+      publications: []
     }
   },
   methods: {
@@ -51,22 +49,30 @@ export default {
       if (content == 'y') {
         this.$store.dispatch('content/deleteAllPublication')
       }
-    }
-  },
-  created() {
-    this.loaded = false
-    firestore
-      .collection('publications')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((snap) => {
-        this.publications = []
-        snap.forEach((doc) => {
+    },
+    async getPublications() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get('http://0.0.0.0:8081/publications', {
+          headers: {
+            Authorization: 'Bearer autenticado'
+          }
+        })
+        const data = req.data
+        data.forEach((doc) => {
           this.publications.push({
-            data: doc.data(),
+            data: doc.data,
             id: doc.id
           })
         })
-      })
+      } catch (e) {
+        console.log(e)
+        alert(e)
+      }
+    }
+  },
+  created() {
+    this.getPublications()
   }
 }
 </script>
