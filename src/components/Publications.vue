@@ -8,12 +8,12 @@
       <v-col lg="8">
         <v-card outlined class="pa-5">
           <v-row>
-            <v-avatar v-if="photoNotNull">
+            <v-avatar v-if="urlPhotoNotNull">
               <img :src="this.photoURL" alt="JK" />
             </v-avatar>
-            <v-avatar v-else color="primary white--text">{{
-              nameInitials
-            }}</v-avatar>
+            <v-avatar v-else color="primary white--text">
+              {{ nameInitials }}
+            </v-avatar>
             <span class="pa-3">{{ name }}</span>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog_edit" width="700">
@@ -85,6 +85,9 @@
               {{ publicationProp.text }}
             </v-card>
           </v-row>
+          <v-row v-if="publicationHasImage">
+            <v-img :src="this.publicationProp.file"> </v-img>
+          </v-row>
           <v-row justify="space-between">
             <v-btn plain @click="test()">
               <v-icon>mdi-thumb-up-outline</v-icon>
@@ -133,7 +136,7 @@ export default {
       }
       return ''
     },
-    photoNotNull() {
+    urlPhotoNotNull() {
       if (this.photoURL != null) {
         return true
       } else {
@@ -148,6 +151,11 @@ export default {
     },
     infoLoaded() {
       return this.loaded
+    },
+    publicationHasImage() {
+      if (this.publicationProp.file) return true
+
+      return false
     }
   },
   methods: {

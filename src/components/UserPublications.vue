@@ -22,6 +22,9 @@
                 {{ publication.text }}
               </v-card-text>
             </v-row>
+            <v-row v-if="publicationHasImage(publication)">
+              <v-img :src="publication.file"> </v-img>
+            </v-row>
             <v-row justify="space-between">
               <v-btn plain @click="test()">
                 <v-icon>mdi-thumb-up-outline</v-icon>
@@ -76,7 +79,13 @@ export default {
       return this.photoURL
     }
   },
-  methods: {},
+  methods: {
+    publicationHasImage(publication) {
+      if (publication.file) return true
+
+      return false
+    }
+  },
   created() {
     // console.log('URL da foto ' + this.photo)
     // console.log('UID: ' + this.id)

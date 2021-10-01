@@ -61,8 +61,6 @@ export default {
       .onSnapshot((snap) => {
         this.publications = []
         snap.forEach((doc) => {
-          // console.log('UID: ' + doc.data().uid)
-          // console.log(doc.data())
           this.publications.push({
             data: doc.data(),
             id: doc.id

@@ -237,16 +237,53 @@ const content = {
   actions: {
     // eslint-disable-next-line no-unused-vars
     async addPublication({ commit }, payload) {
-      try {
-        payload.createdAt = timestamp
-        console.log('Timestamp da pub: ')
-        console.log(timestamp.valueOf())
-        await firestore.collection('publications').add(payload)
-        console.log('Inserido no firestore com sucesso!')
-      } catch (error) {
-        console.log(error)
+      // console.log(payload.file)
+      if (payload.file) {
+        const docRef = firestore.collection('publications').doc()
+        console.log('ID do doc: ' + docRef.id)
+        const upload = await storage
+          .ref()
+          .child(`publications/${docRef.id}/${+new Date()}`)
+          .put(payload.file)
+
+        await upload.ref.getDownloadURL().then((url) => {
+          console.log(url)
+          try {
+            firestore.collection('publications').add({
+              uid: payload.uid,
+              text: payload.text,
+              file: url,
+              createdAt: timestamp
+            })
+            console.log('Inserido no firestore com sucesso!')
+          } catch (error) {
+            console.log(error)
+          }
+        })
+      } else {
+        try {
+          payload.createdAt = timestamp
+          console.log('Timestamp da pub: ')
+          console.log(timestamp.valueOf())
+          await firestore.collection('publications').add(payload)
+          console.log('Inserido no firestore com sucesso!')
+        } catch (error) {
+          console.log(error)
+        }
       }
     },
+    // eslint-disable-next-line no-unused-vars
+    // async addPublication({ commit }, payload) {
+    //   try {
+    //     payload.createdAt = timestamp
+    //     console.log('Timestamp da pub: ')
+    //     console.log(timestamp.valueOf())
+    //     await firestore.collection('publications').add(payload)
+    //     console.log('Inserido no firestore com sucesso!')
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // },
     async deletePublication({ commit }, payload) {
       try {
         await firestore
