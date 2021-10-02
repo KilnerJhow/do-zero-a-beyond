@@ -57,6 +57,7 @@
 import ToolBar from '../components/ToolBar.vue'
 import UserPublications from '../components/UserPublications.vue'
 // import { firestore } from '../config/firebase.js'
+import { apiURL } from '../config/apiURL.js'
 
 export default {
   data() {
@@ -89,7 +90,7 @@ export default {
       try {
         const axios = require('axios').default
         const req = await axios.get(
-          `http://0.0.0.0:8081/users/${this.$route.params.id}`,
+          `${apiURL}/users/${this.$route.params.id}`,
           {
             headers: {
               Authorization: 'Bearer autenticado'
@@ -98,7 +99,7 @@ export default {
         )
 
         const req2 = await axios.get(
-          `http://0.0.0.0:8081/users/collection/${this.$route.params.id}`,
+          `${apiURL}/users/collection/${this.$route.params.id}`,
           {
             headers: {
               Authorization: 'Bearer autenticado'

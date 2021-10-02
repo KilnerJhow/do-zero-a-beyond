@@ -107,6 +107,7 @@
 
 <script>
 // import { firestore } from '../config/firebase.js'
+import { apiURL } from '../config/apiURL.js'
 export default {
   props: ['publicationProp', 'idProp'],
   data() {
@@ -189,7 +190,7 @@ export default {
       try {
         const axios = require('axios').default
         const req = await axios.get(
-          `http://0.0.0.0:8081/users/${this.publicationProp.uid}`,
+          `${apiURL}/users/${this.publicationProp.uid}`,
           {
             headers: {
               Authorization: 'Bearer autenticado'

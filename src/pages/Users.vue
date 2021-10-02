@@ -12,7 +12,7 @@
 </template>
 
 <script>
-// import { firestore } from '../config/firebase.js'
+import { apiURL } from '../config/apiURL.js'
 import ToolBar from '../components/ToolBar.vue'
 export default {
   data() {
@@ -28,7 +28,7 @@ export default {
     async listAllUsers() {
       try {
         const axios = require('axios').default
-        const req = await axios.get('http://0.0.0.0:8081/users', {
+        const req = await axios.get(`${apiURL}/users`, {
           headers: {
             Authorization: 'Bearer autenticado'
           }

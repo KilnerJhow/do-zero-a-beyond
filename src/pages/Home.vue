@@ -19,6 +19,7 @@
 import ToolBar from '../components/ToolBar.vue'
 import Publications from '../components/Publications.vue'
 import AddPublication from '../components/AddPublication.vue'
+import { apiURL } from '../config/apiURL.js'
 // import { firestore } from '../config/firebase.js'
 
 export default {
@@ -53,7 +54,7 @@ export default {
     async getPublications() {
       try {
         const axios = require('axios').default
-        const req = await axios.get('http://0.0.0.0:8081/publications', {
+        const req = await axios.get(`${apiURL}/publications`, {
           headers: {
             Authorization: 'Bearer autenticado'
           }

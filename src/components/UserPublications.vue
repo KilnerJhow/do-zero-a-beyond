@@ -45,6 +45,7 @@
 
 <script>
 // import { firestore } from '../config/firebase.js'
+import { apiURL } from '../config/apiURL.js'
 export default {
   props: ['id', 'name', 'photoURL'],
   data() {
@@ -88,7 +89,7 @@ export default {
     async getUserPublications() {
       try {
         const axios = require('axios').default
-        const req = await axios.get('http://0.0.0.0:8081/publications', {
+        const req = await axios.get(`${apiURL}/publications`, {
           headers: {
             Authorization: 'Bearer autenticado'
           }
