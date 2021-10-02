@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center" no-gutters>
-      <v-col lg="8" class="mt-4">
+      <v-col lg="8" md="7" class="mt-4">
         <v-card outlined class="pa-5">
           <v-avatar v-if="photoNotNull">
             <img :src="this.photo" alt="JK" />

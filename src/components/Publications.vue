@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row no-gutters justify="center">
-      <v-col lg="8">
+      <v-col lg="8" md="7">
         <v-skeleton-loader
           v-if="!infoLoaded"
           type="list-item-avatar, divider, article, actions"
@@ -183,8 +183,9 @@ export default {
       this.dialog_edit = false
     },
     test() {
-      console.log('Publication id ' + this.publicationProp.user_id)
-      console.log('User id ' + this.$store.state.users.loggedUser.uid)
+      console.log('Curti!')
+      // console.log('Publication id ' + this.publicationProp.user_id)
+      // console.log('User id ' + this.$store.state.users.loggedUser.uid)
     },
     async getUserInfo() {
       try {

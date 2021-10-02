@@ -1,13 +1,21 @@
 <template>
-  <v-main>
+  <v-container fluid>
+    <v-row align-content="center" justify="center" no-gutters>
+      <v-col md="6" lg="7">
+        <v-skeleton-loader
+          v-if="!infoLoaded"
+          type="list-item-avatar, divider, article, actions"
+        ></v-skeleton-loader>
+      </v-col>
+    </v-row>
     <v-container
       fluid
       v-for="(publication, index) in this.publications"
       :key="index"
     >
-      <v-row no-gutters justify="center">
-        <v-col lg="8" md="8" class="align">
-          <v-card class="pa-5">
+      <v-row v-if="infoLoaded" no-gutters justify="center">
+        <v-col lg="8" md="7">
+          <v-card outlined class="pa-5">
             <v-row>
               <v-avatar v-if="photoNotNull">
                 <img :src="photo" />
@@ -18,9 +26,9 @@
               <span class="pa-3">{{ name }}</span>
             </v-row>
             <v-row>
-              <v-card-text>
+              <v-card flat>
                 {{ publication.data.text }}
-              </v-card-text>
+              </v-card>
             </v-row>
             <v-row v-if="publicationHasImage(publication)">
               <v-img :src="publication.file"> </v-img>
@@ -40,7 +48,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-main>
+  </v-container>
 </template>
 
 <script>
@@ -50,7 +58,8 @@ export default {
   props: ['id', 'name', 'photoURL'],
   data() {
     return {
-      publications: []
+      publications: [],
+      loaded: false
       // photo: this.photoURL
     }
   },
@@ -86,6 +95,9 @@ export default {
 
       return false
     },
+    infoLoaded() {
+      return this.loaded
+    },
     async getUserPublications() {
       try {
         const axios = require('axios').default
@@ -103,6 +115,7 @@ export default {
             })
           }
         })
+        this.loaded = true
         // console.log(this.publications)
       } catch (e) {
         console.log(e)
@@ -111,6 +124,7 @@ export default {
     }
   },
   created() {
+    this.loaded = false
     this.getUserPublications()
     // firestore
     //   .collection('publications')

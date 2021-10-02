@@ -2,7 +2,7 @@
   <v-container>
     <tool-bar />
     <v-row align="center" justify="center">
-      <v-col>
+      <v-col md="7" lg="8">
         <v-row justify="center" class="mt-4 mb-1">
           <v-dialog v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">

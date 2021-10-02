@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <tool-bar />
-    <v-container>
+    <v-container fluid>
       <v-row no-gutters justify="center" align="center">
         <v-col v-if="true" lg="6" md="6">
           <v-row justify="center" class="ma-4">
@@ -39,13 +39,13 @@
           </v-card>
         </v-col>
       </v-row>
-      <user-publications
-        v-if="infoLoaded && publicUser"
-        :id="this.$route.params.id"
-        :name="this.user.displayName"
-        :photoURL="this.user.photoURL"
-      />
     </v-container>
+    <user-publications
+      v-if="infoLoaded && publicUser"
+      :id="this.$route.params.id"
+      :name="this.user.displayName"
+      :photoURL="this.user.photoURL"
+    />
   </v-main>
 </template>
 
