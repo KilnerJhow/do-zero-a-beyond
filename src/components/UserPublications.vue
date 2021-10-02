@@ -26,7 +26,7 @@
               <span class="pa-3">{{ name }}</span>
             </v-row>
             <v-row>
-              <v-card flat>
+              <v-card flat class="pa-5">
                 {{ publication.data.text }}
               </v-card>
             </v-row>

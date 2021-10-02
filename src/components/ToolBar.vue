@@ -41,29 +41,6 @@
                 {{ item.name }}
               </v-list-item-title>
             </v-list-item>
-            <v-dialog v-model="dialog_delete_toolbar" width="500">
-              <template v-slot:activator="{ on }">
-                <v-list-item v-on="on">
-                  <v-list-item-icon>
-                    <v-icon>mdi-delete</v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-title>Apagar publicações</v-list-item-title>
-                </v-list-item>
-              </template>
-
-              <v-card>
-                <v-card-title>
-                  Deseja excluir todas as publicações?
-                </v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="deleteAllPublications()">
-                    Sim
-                  </v-btn>
-                  <v-btn text color="red" @click="closeDialog()">Não</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </v-list-item-group>
         </v-list>
       </v-menu>
@@ -85,8 +62,6 @@ export default {
         { name: 'Logout', icon: 'mdi-logout' }
       ],
       selected: null
-      // leftDrawer: false,
-      // rightDrawer: false
     }
   },
   computed: {
@@ -110,10 +85,6 @@ export default {
     }
   },
   methods: {
-    deleteAllPublications() {
-      this.$emit('delete-all', 'y')
-      this.dialog_delete_toolbar = false
-    },
     closeDialog() {
       this.dialog_delete_toolbar = false
     },

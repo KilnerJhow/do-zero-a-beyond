@@ -81,7 +81,7 @@
             </v-dialog>
           </v-row>
           <v-row class="pa-3 rounded">
-            <v-card flat>
+            <v-card flat class="pt-5 pb-5">
               {{ publicationProp.text }}
             </v-card>
           </v-row>
@@ -124,7 +124,7 @@ export default {
   computed: {
     nameInitials() {
       if (this.infoLoaded) {
-        let name = this.publicationProp.name.split(' ')
+        let name = this.name.split(' ')
         let ret = ''
         if (name.length > 1) {
           // console.log(name[0].charAt(0) + name[1].charAt(0))
@@ -169,8 +169,24 @@ export default {
       console.log('ID da publicação: ' + this.idProp)
       this.$emit('change-content', content)
     },
-    removeContent() {
-      this.$emit('remove-content', this.idProp)
+    async removeContent() {
+      // this.$emit('remove-content', this.idProp)
+      try {
+        const axios = require('axios').default
+        const req = await axios.delete(
+          `${apiURL}/publications/${this.idProp}`,
+          {
+            headers: {
+              Authorization: 'Bearer autenticado'
+            }
+          }
+        )
+        console.log('Deletado com sucesso!')
+        console.log(req)
+      } catch (e) {
+        console.log(e)
+        // alert(e)
+      }
       this.dialog_delete = false
     },
     showContent() {
@@ -198,9 +214,10 @@ export default {
             }
           }
         )
-        this.loaded = true
         this.name = req.data.displayName
         this.photoURL = req.data.photoURL
+        this.loaded = true
+        // console.log('name: ' + this.name)
       } catch (e) {
         console.log(e)
         // alert(e)

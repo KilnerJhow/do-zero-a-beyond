@@ -272,18 +272,6 @@ const content = {
         }
       }
     },
-    async deletePublication({ commit }, payload) {
-      try {
-        await firestore
-          .collection('publications')
-          .doc(payload)
-          .delete()
-        console.log('Excluido com sucesso')
-      } catch (error) {
-        console.log(error)
-      }
-      commit('deleteContent', payload)
-    },
     // eslint-disable-next-line no-unused-vars
     async changePublication({ commit }, payload) {
       try {
@@ -315,10 +303,6 @@ const content = {
       }
       console.log(publication)
       state.publications.unshift(publication)
-    },
-    deleteContent(state, index) {
-      let objIndex = state.publications.findIndex((obj) => obj.id == index)
-      state.publications.splice(objIndex, 1)
     },
     changeContent(state, content) {
       let objIndex = state.publications.findIndex(
