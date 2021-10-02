@@ -1,1 +1,1 @@
-export const apiURL = 'http://0.0.0.0:8081'
+export const apiURL = 'https://dozeroabeyond-vgcxwgb4tq-uc.a.run.app'

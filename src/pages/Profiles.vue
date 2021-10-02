@@ -1,9 +1,9 @@
 <template>
   <v-main>
     <tool-bar />
-    <v-container fluid>
-      <v-row no-gutters justify="center">
-        <v-col v-if="true" lg="8" md="8">
+    <v-container>
+      <v-row no-gutters justify="center" align="center">
+        <v-col v-if="true" lg="6" md="6">
           <v-row justify="center" class="ma-4">
             <v-avatar size="100">
               <v-img :src="this.user.photoURL"></v-img>
@@ -24,11 +24,7 @@
         </v-col>
       </v-row>
       <v-row no-gutters justify="center" style="height:50vh" v-if="!publicUser">
-        <v-col
-          lg="8"
-          md="8"
-          class="d-flex flex-column justify-center align-center"
-        >
+        <v-col lg="6" md="6">
           <v-card>
             <v-skeleton-loader
               v-if="!infoLoaded"
@@ -43,13 +39,13 @@
           </v-card>
         </v-col>
       </v-row>
+      <user-publications
+        v-if="infoLoaded && publicUser"
+        :id="this.$route.params.id"
+        :name="this.user.displayName"
+        :photoURL="this.user.photoURL"
+      />
     </v-container>
-    <user-publications
-      v-if="infoLoaded && publicUser"
-      :id="this.$route.params.id"
-      :name="this.user.displayName"
-      :photoURL="this.user.photoURL"
-    />
   </v-main>
 </template>
 

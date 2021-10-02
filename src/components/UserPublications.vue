@@ -103,7 +103,7 @@ export default {
             })
           }
         })
-        console.log(this.publications)
+        // console.log(this.publications)
       } catch (e) {
         console.log(e)
         // alert(e)

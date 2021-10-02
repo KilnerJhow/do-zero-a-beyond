@@ -17,7 +17,7 @@
                 <v-avatar
                   v-if="!photoNotNull"
                   color="primary lighten-1 white--text"
-                  size="100"
+                  size="300"
                 >
                   <span style="font-size:36px">JK</span>
                 </v-avatar>
@@ -48,8 +48,8 @@
           </v-dialog>
         </v-row>
         <v-row justify="center" no-gutters>
-          <v-card>
-            <v-card-title width="700">
+          <v-card class="pa-5">
+            <v-card-title width="700" class="justify-center">
               {{ this.name }}
               <v-dialog width="500" v-model="dialogEdit">
                 <template v-slot:activator="{ on, attrs }">
@@ -118,6 +118,7 @@
 <script>
 import ToolBar from '../components/ToolBar.vue'
 import UserPublications from '../components/UserPublications.vue'
+import { apiURL } from '../config/apiURL.js'
 export default {
   data() {
     return {
@@ -127,8 +128,11 @@ export default {
       name: this.$store.state.users.loggedUser.displayName,
       dialogEdit: false,
       dialogConfig: false,
-      switch1: this.$store.state.users.loggedUser.public
+      switch1: true
     }
+  },
+  created() {
+    this.getUserInfo()
   },
   methods: {
     closeDialog() {
@@ -166,6 +170,24 @@ export default {
       }
       this.$store.dispatch('users/changeConfig', payload)
       this.dialogConfig = false
+    },
+    async getUserInfo() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get(
+          `${apiURL}/users/collection/${this.$route.params.id}`,
+          {
+            headers: {
+              Authorization: 'Bearer autenticado'
+            }
+          }
+        )
+        this.switch1 = req.data.public
+        // console.log('Privacidade do usuario ' + this.switch1)
+      } catch (e) {
+        console.log(e)
+        // alert(e)
+      }
     }
   },
   computed: {
