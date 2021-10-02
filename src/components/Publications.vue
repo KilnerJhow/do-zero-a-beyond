@@ -201,7 +201,7 @@ export default {
         this.photoURL = req.data.photoURL
       } catch (e) {
         console.log(e)
-        alert(e)
+        // alert(e)
       }
 
       // console.log(req.data.displayName)

@@ -56,12 +56,13 @@
 <script>
 import ToolBar from '../components/ToolBar.vue'
 import UserPublications from '../components/UserPublications.vue'
-import { firestore } from '../config/firebase.js'
+// import { firestore } from '../config/firebase.js'
 
 export default {
   data() {
     return {
-      user: {}
+      user: {},
+      loaded: false
     }
   },
   components: {
@@ -75,30 +76,52 @@ export default {
     },
     publicUser() {
       // return false
+      console.log('Usuário: ' + this.user.public)
       return this.user.public
     },
     infoLoaded() {
       // return false
-      if (this.user != {}) {
-        return true
-      } else {
-        return false
+      return this.loaded
+    }
+  },
+  methods: {
+    async getProfile() {
+      try {
+        const axios = require('axios').default
+        const req = await axios.get(
+          `http://0.0.0.0:8081/users/${this.$route.params.id}`,
+          {
+            headers: {
+              Authorization: 'Bearer autenticado'
+            }
+          }
+        )
+
+        const req2 = await axios.get(
+          `http://0.0.0.0:8081/users/collection/${this.$route.params.id}`,
+          {
+            headers: {
+              Authorization: 'Bearer autenticado'
+            }
+          }
+        )
+        // console.log()
+        this.loaded = true
+        this.user = {
+          public: req2.data.public,
+          displayName: req.data.displayName,
+          photoURL: req.data.photoURL
+        }
+        console.log(this.user)
+      } catch (e) {
+        console.log(e)
+        // alert(e)
       }
     }
   },
   created() {
-    firestore
-      .collection('users')
-      .doc(this.$route.params.id)
-      .get()
-      .then((doc) => {
-        if (doc.data()) {
-          // console.log('Profile')
-          this.user = {}
-          this.user = doc.data()
-          console.log(this.user.displayName)
-        }
-      })
+    this.loaded = false
+    this.getProfile()
   }
 }
 </script>

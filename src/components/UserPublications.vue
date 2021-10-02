@@ -105,7 +105,7 @@ export default {
         console.log(this.publications)
       } catch (e) {
         console.log(e)
-        alert(e)
+        // alert(e)
       }
     }
   },
