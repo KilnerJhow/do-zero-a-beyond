@@ -49,6 +49,7 @@
                     Criar nova conta
                   </v-card-title>
                   <v-text-field
+                    :rules="rules.required"
                     v-model="displayName"
                     label="Digite seu nome"
                     class="pa-5"
@@ -63,7 +64,7 @@
                   ></v-text-field>
                   <v-text-field
                     ref="newPassword"
-                    :rules="[rules.required, rules.password]"
+                    :rules="rules.required"
                     label="Digite sua senha"
                     :type="marker ? 'text' : 'password'"
                     class="pa-5"
@@ -102,12 +103,13 @@ export default {
       dialog: false,
       marker: false,
       rules: {
-        required: (value) => !!value || 'Required.',
+        required: (value) => !!value || 'Necessário.',
         password: (value) => {
           const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%&])(?=.{8,})/
           return (
             pattern.test(value) ||
-            'Min. 8 characters with at least one capital letter, a number and a special character.'
+            'Min. de 8 caracteres com no mínimo: uma letra maiúscula, um número e um caractere especial'
+            // 'Min. 8 characters with at least one capital letter, a number and a special character.'
           )
         }
       },

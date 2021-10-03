@@ -53,6 +53,7 @@ export default {
       photo: this.$store.state.users.loggedUser.photoURL,
       textVisibility: false,
       imgVisibility: false,
+      previewImg: null,
       imgFile: null
     }
   },
@@ -78,8 +79,12 @@ export default {
     }
   },
   methods: {
+    selectImage(image) {
+      this.imgFile = image
+      this.previewImg = URL.createObjectURL(this.imgFile)
+    },
     publish() {
-      if (this.text.trim() != '') {
+      if (this.text.trim() != '' || this.imgFile != null) {
         let publication = {
           text: this.text,
           uid: this.$store.state.users.loggedUser.uid,

@@ -30,7 +30,7 @@
               </template>
 
               <v-card>
-                <v-card-title class="text-h5 grey lighten-2">
+                <v-card-title color="primary">
                   Editando publicação
                 </v-card-title>
                 <v-textarea
@@ -80,7 +80,7 @@
               </v-card>
             </v-dialog>
           </v-row>
-          <v-row class="pa-3 rounded">
+          <v-row class="pa-3 rounded" v-if="publicationHasText">
             <v-card flat class="pt-5 pb-5">
               {{ publicationProp.text }}
             </v-card>
@@ -157,6 +157,11 @@ export default {
       if (this.publicationProp.file) return true
 
       return false
+    },
+    publicationHasText() {
+      if (this.publicationProp.text != null) return true
+
+      return false
     }
   },
   methods: {
@@ -173,16 +178,14 @@ export default {
       // this.$emit('remove-content', this.idProp)
       try {
         const axios = require('axios').default
-        const req = await axios.delete(
-          `${apiURL}/publications/${this.idProp}`,
-          {
-            headers: {
-              Authorization: 'Bearer autenticado'
-            }
+        await axios.delete(`${apiURL}/publications/${this.idProp}`, {
+          headers: {
+            Authorization: 'Bearer autenticado'
           }
-        )
+        })
+        alert('Deletado com sucesso!')
         console.log('Deletado com sucesso!')
-        console.log(req)
+        // console.log(req)
       } catch (e) {
         console.log(e)
         // alert(e)
@@ -214,6 +217,7 @@ export default {
             }
           }
         )
+        console.log('photoURL: ' + req.data.photoURL)
         this.name = req.data.displayName
         this.photoURL = req.data.photoURL
         this.loaded = true

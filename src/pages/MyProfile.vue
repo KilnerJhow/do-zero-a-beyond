@@ -17,9 +17,10 @@
                 <v-avatar
                   v-if="!photoNotNull"
                   color="primary lighten-1 white--text"
-                  size="300"
+                  size="200"
+                  class="ma-4"
                 >
-                  <span style="font-size:36px">JK</span>
+                  <span style="font-size:36px">{{ nameInitials }}</span>
                 </v-avatar>
                 <v-avatar v-else size="100">
                   <v-img :src="imgURL" alt="" />
@@ -201,6 +202,18 @@ export default {
     imgURL() {
       console.log(this.$store.state.users.loggedUser)
       return this.$store.state.users.loggedUser.photoURL
+    },
+    nameInitials() {
+      let name = this.name.split(' ')
+      let ret = ''
+      if (name.length > 1) {
+        // console.log(name[0].charAt(0) + name[1].charAt(0))
+        ret = name[0].charAt(0) + name[name.length - 1].charAt(0)
+        return ret.toUpperCase()
+      } else {
+        ret = name[0].charAt(0)
+        return ret
+      }
     }
   },
   components: {

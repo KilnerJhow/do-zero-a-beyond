@@ -256,6 +256,7 @@ const content = {
               createdAt: timestamp
             })
             console.log('Inserido no firestore com sucesso!')
+            alert('Publicação criada com sucesso!')
           } catch (error) {
             console.log(error)
           }
@@ -267,6 +268,7 @@ const content = {
           console.log(timestamp.valueOf())
           await firestore.collection('publications').add(payload)
           console.log('Inserido no firestore com sucesso!')
+          alert('Publicação criada com sucesso!')
         } catch (error) {
           console.log(error)
         }
@@ -282,6 +284,7 @@ const content = {
             text: payload.text
           })
         console.log('Modificado com sucesso')
+        alert('Modificado com sucesso!')
       } catch (error) {
         console.log(error)
       }
